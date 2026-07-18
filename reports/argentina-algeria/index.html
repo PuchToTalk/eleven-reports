@@ -26,13 +26,10 @@
   <section class="mb-10">
     <h2 class="text-xl font-semibold mb-4 text-slate-200">Events Timeline</h2>
     <div class="space-y-3">
-      <details class="rounded-lg border border-slate-700 bg-slate-900 p-4">
-        <summary class="cursor-pointer flex items-start gap-3">
+      <div class="rounded-lg border border-slate-700 bg-slate-900 p-4 flex items-start gap-3">
           <span class="text-xl leading-none">⚽</span>
           <span><span class="text-xs font-mono text-slate-400 mr-2">02:45 · H1</span>Algeria — dangerous attack<span class="block mt-1 text-sm text-slate-400">1× attacking movement, 1× dangerous attack</span></span>
-        </summary>
-        <div class="mt-3 pl-9 text-sm text-slate-300"><p class="mt-1"><span class="text-slate-400">Situation:</span> Algeria circulating possession against Argentina&#x27;s compact mid-block</p><p class="mt-1"><span class="text-slate-400">Action:</span> Algeria central midfielder executes a lateral pass to the right flank to stretch Argentina&#x27;s defensive block and maintain possession.</p><p class="mt-1"><span class="text-slate-400">Outcome:</span> turnover (success: False)</p></div>
-      </details>
+      </div>
       <div class="rounded-lg border border-slate-700 bg-slate-900 p-4 flex items-start gap-3">
           <span class="text-xl leading-none">🔄</span>
           <span><span class="text-xs font-mono text-slate-400 mr-2">06:38 · H1</span>Algeria — possession change<span class="block mt-1 text-sm text-slate-400">3× possession change within 9s</span></span>
@@ -61,10 +58,13 @@
           <span class="text-xl leading-none">⚽</span>
           <span><span class="text-xs font-mono text-slate-400 mr-2">36:50 · H1</span>Argentina — attacking movement<span class="block mt-1 text-sm text-slate-400">1× attacking movement, 1× possession change within 8s</span></span>
       </div>
-      <div class="rounded-lg border border-slate-700 bg-slate-900 p-4 flex items-start gap-3">
+      <details class="rounded-lg border border-slate-700 bg-slate-900 p-4">
+        <summary class="cursor-pointer flex items-start gap-3">
           <span class="text-xl leading-none">⚽</span>
           <span><span class="text-xs font-mono text-slate-400 mr-2">40:12 · H1</span>Algeria — attacking movement<span class="block mt-1 text-sm text-slate-400">1× attacking movement, 1× possession change within 1s</span></span>
-      </div>
+        </summary>
+        <div class="mt-3 pl-9 text-sm text-slate-300"><p class="mt-1"><span class="text-slate-400">Situation:</span> Algeria builds up down the left flank against Argentina&#x27;s compact mid-block.</p><p class="mt-1"><span class="text-slate-400">Action:</span> Algeria left winger executes a wide progression run to bypass Argentina&#x27;s mid-block, resulting in a crossing opportunity.</p><p class="mt-1"><span class="text-slate-400">Outcome:</span> chance_created (success: True)</p></div>
+      </details>
       <div class="rounded-lg border border-slate-700 bg-slate-900 p-4 flex items-start gap-3">
           <span class="text-xl leading-none">⚽</span>
           <span><span class="text-xs font-mono text-slate-400 mr-2">40:45 · H1</span>Argentina — attacking movement<span class="block mt-1 text-sm text-slate-400">1× attacking movement, 1× possession change within 1s</span></span>
@@ -126,30 +126,30 @@
   <section class="mb-10">
     <h2 class="text-xl font-semibold mb-4 text-slate-200">AI Halftime Advice</h2>
     <div class="space-y-3">
-      <div class="rounded-lg border bg-red-500/10 border-red-500/40 p-4">
-        <span class="text-xs font-bold uppercase tracking-wider text-red-400">FIX</span>
-        <p class="mt-2">Consider tightening the first press trigger so the nearest three players jump earlier on Algeria’s central-to-wide circulation, rather than allowing repeated lateral switches into the flank.</p>
-        <p class="mt-2 text-xs text-slate-400">Evidence: Only 1 high press is recorded for Argentina, and sequence 1 says Argentina drops into a compact mid-to-low block while Algeria circulate comfortably across the backline and midfield.</p>
+      <div class="rounded-lg border bg-emerald-500/10 border-emerald-500/40 p-4">
+        <span class="text-xs font-bold uppercase tracking-wider text-emerald-400">EXPLOIT</span>
+        <p class="mt-2">Consider attacking the edge of Algeria’s box with late runners and cutbacks after set pieces, rather than only loading the six-yard area.</p>
+        <p class="mt-2 text-xs text-slate-400">Evidence: Sequence 3 and Sequence 10 both note Algeria’s deep defensive block leaves the penalty-arc zone open; Sequence 12 says Algeria’s deep positioning leaves space at the edge of the box for rebounds.</p>
       </div>
       <div class="rounded-lg border bg-emerald-500/10 border-emerald-500/40 p-4">
         <span class="text-xs font-bold uppercase tracking-wider text-emerald-400">EXPLOIT</span>
-        <p class="mt-2">Consider attacking the space behind Algeria’s wide circulation with immediate vertical transitions after regains, especially when their midfield has shifted to the right flank.</p>
-        <p class="mt-2 text-xs text-slate-400">Evidence: The SAO triplet in sequence 1 shows Algeria’s central midfielder playing a lateral pass to the right flank that ended in a turnover, indicating their wide progression can be punished if Argentina spring forward quickly.</p>
+        <p class="mt-2">Consider repeating the long diagonal switch to the far right side when Algeria compresses centrally, because that route already created a chance.</p>
+        <p class="mt-2 text-xs text-slate-400">Evidence: SAO triplet in Sequence 14: Argentina midfielder’s long diagonal pass to the right flank bypassed Algeria’s mid-block and resulted in chance_created.</p>
+      </div>
+      <div class="rounded-lg border bg-red-500/10 border-red-500/40 p-4">
+        <span class="text-xs font-bold uppercase tracking-wider text-red-400">FIX</span>
+        <p class="mt-2">Consider tightening rest defense behind the ball when Argentina build in the middle third, because Algeria’s compact block is inviting switches and quick counters if possession turns over.</p>
+        <p class="mt-2 text-xs text-slate-400">Evidence: Sequence 15 and Sequence 16 both warn that Argentina’s advanced/high line could be exposed on turnovers; Sequence 14 shows the switch-based attack came from a transition.</p>
       </div>
       <div class="rounded-lg border bg-blue-500/10 border-blue-500/40 p-4">
         <span class="text-xs font-bold uppercase tracking-wider text-blue-400">FORMATION</span>
-        <p class="mt-2">Consider keeping the 3-3-2-1 but raising the block 5-8 meters so the midfield line can compress Algeria’s build-up earlier without losing central cover.</p>
-        <p class="mt-2 text-xs text-slate-400">Evidence: Argentina’s block height is 41.2m with 21.4m line spacing, while the analysis repeatedly describes a compact low-to-mid block that concedes comfortable middle-third possession.</p>
+        <p class="mt-2">Consider keeping the 3-3-2-1 but instructing the wide side to stay higher and wider, so the team can stretch Algeria’s 3-4-1 block earlier and create cleaner crossing lanes.</p>
+        <p class="mt-2 text-xs text-slate-400">Evidence: Dashboard formations show Argentina partial 3-3-2-1 vs Algeria partial 3-4-1; Sequence 2 and Sequence 15 both describe Algeria’s compact central block forcing play wide.</p>
       </div>
       <div class="rounded-lg border bg-amber-500/10 border-amber-500/40 p-4">
         <span class="text-xs font-bold uppercase tracking-wider text-amber-400">PERSONNEL</span>
-        <p class="mt-2">Consider using the fastest Argentina central runner as the first outlet on regain, because the tracked dangerous-attack windows show one player reaching 29.8 km/h and covering 48.8m in 16.2s.</p>
-        <p class="mt-2 text-xs text-slate-400">Evidence: Top-player tracking from dangerous-attack windows shows Argentina’s most explosive runner with 48.8m covered and a 29.8 km/h max speed, which fits a direct transition role.</p>
-      </div>
-      <div class="rounded-lg border bg-purple-500/10 border-purple-500/40 p-4">
-        <span class="text-xs font-bold uppercase tracking-wider text-purple-400">SET PIECES</span>
-        <p class="mt-2">Consider assigning a dedicated edge-of-box collector for second balls on attacking set pieces, rather than overcommitting all runners centrally.</p>
-        <p class="mt-2 text-xs text-slate-400">Evidence: Sequence 2-3 set-piece analysis says Algeria defend deep in the box and leave the edge of the penalty area vulnerable to second-ball collection.</p>
+        <p class="mt-2">Consider using the fastest attacking runner more aggressively on the weak side after switches, because the tracked dangerous-attack profile shows repeated high-speed support runs that can attack the space Algeria leaves wide.</p>
+        <p class="mt-2 text-xs text-slate-400">Evidence: Argentina attacking runner: 48.8m in 16.2s, avg 10.9 km/h, max 29.8 km/h; this fits the successful far-side switch pattern in Sequence 14.</p>
       </div>
     </div>
   </section>
