@@ -1,158 +1,305 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Argentina vs Algeria — Tactical Session Replay</title>
-<script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-slate-950 text-slate-100 antialiased">
-<main class="max-w-3xl mx-auto px-4 py-10">
+<style>
+:root {
+  --bg:#0a0b0f; --surface:#12141c; --surface-2:#171a24; --border:#232735;
+  --text-1:#f4f5f7; --text-2:#a0a5b4; --text-3:#7b8194;
+  --team-a:#7db6ff; --team-b:#2fbf71; --accent:#6d5efc; --key:#f5b13d;
+  --cat-exploit:#2fbf71; --cat-fix:#f47067; --cat-formation:#7db6ff;
+  --cat-personnel:#f5b13d; --cat-set-pieces:#b392f0;
+  --r-card:12px; --r-chip:6px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { -webkit-text-size-adjust:100%; }
+body {
+  background:var(--bg); color:var(--text-1);
+  font:14px/1.5 system-ui,-apple-system,"Segoe UI",Inter,Roboto,"Helvetica Neue",Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+main { max-width:880px; margin:0 auto; padding:40px 16px 32px; }
+section { margin-bottom:40px; }
+h2 { font-size:16px; font-weight:600; letter-spacing:-.01em; margin-bottom:12px; }
+h3 { font-size:14px; font-weight:600; color:var(--text-2); margin:16px 0 12px; }
+a { color:var(--accent); text-decoration:none; }
+a:hover, a:focus-visible { text-decoration:underline; }
+.num { font-variant-numeric:tabular-nums; letter-spacing:-.02em; }
+.mono { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-variant-numeric:tabular-nums; }
 
-  <header class="mb-10 text-center">
-    <p class="text-sm uppercase tracking-widest text-slate-400 mb-2">Eleven — Tactical Session Replay</p>
-    <h1 class="text-3xl md:text-5xl font-bold">Argentina <span class="text-slate-500">vs</span> Algeria</h1>
-    <p class="mt-3 text-slate-400">FIFA World Cup 2026 · 2026-06-28 · 3-0</p>
+/* header */
+.hdr { text-align:center; margin-bottom:40px; }
+.hdr .eyebrow { font-size:12px; text-transform:uppercase; letter-spacing:.14em; color:var(--text-3); margin-bottom:8px; }
+.hdr h1 { font-size:28px; font-weight:700; letter-spacing:-.02em; }
+@media (min-width:720px) { .hdr h1 { font-size:40px; } }
+.hdr h1 .vs { color:var(--text-3); font-weight:500; }
+.hdr .sub { margin-top:8px; color:var(--text-2); font-size:13px; }
+.meta-strip {
+  display:inline-flex; flex-wrap:wrap; justify-content:center; gap:6px 14px;
+  margin-top:12px; padding:6px 14px; border:1px solid var(--border);
+  border-radius:var(--r-chip); background:var(--surface); color:var(--text-3);
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:12px;
+  font-variant-numeric:tabular-nums;
+}
+
+/* cards & chips */
+.card { background:var(--surface); border:1px solid var(--border); border-radius:var(--r-card); }
+.chip {
+  display:inline-block; padding:2px 8px; border-radius:var(--r-chip);
+  background:var(--surface-2); color:var(--text-3); font-size:12px;
+  font-variant-numeric:tabular-nums;
+}
+.media { overflow:hidden; border-radius:var(--r-card); border:1px solid var(--border); background:var(--surface); }
+.media img, .media video { width:100%; display:block; }
+.caption { margin-top:6px; font-size:12px; color:var(--text-2); }
+
+/* timeline */
+.legend { display:flex; flex-wrap:wrap; gap:6px 14px; margin-bottom:12px; font-size:12px; color:var(--text-3); }
+.legend span { display:inline-flex; align-items:center; gap:5px; }
+.legend svg { color:var(--text-2); }
+.tl { display:flex; flex-direction:column; gap:8px; }
+.ev {
+  background:var(--surface); border:1px solid var(--border);
+  border-left:3px solid var(--border); border-radius:var(--r-card);
+  padding:10px 14px;
+}
+.ev.team-a { border-left-color:var(--team-a); }
+.ev.team-b { border-left-color:var(--team-b); }
+.ev-head { display:flex; align-items:flex-start; gap:10px; }
+.ev-head svg { flex:none; margin-top:2px; color:var(--text-2); }
+.ev-ts { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:12px; color:var(--text-3); font-variant-numeric:tabular-nums; margin-right:8px; }
+.ev-team { font-weight:600; }
+.ev.team-a .ev-team { color:var(--team-a); }
+.ev.team-b .ev-team { color:var(--team-b); }
+.ev-type { color:var(--text-1); font-weight:600; }
+.ev-chips { margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; }
+.ev.key {
+  border-color:color-mix(in srgb, var(--key) 45%, var(--border));
+  border-left:3px solid var(--key);
+  box-shadow:0 0 0 1px color-mix(in srgb, var(--key) 18%, transparent),
+             0 0 18px color-mix(in srgb, var(--key) 10%, transparent);
+}
+.sao { margin-top:8px; display:flex; flex-direction:column; gap:4px; font-size:13px; color:var(--text-1); }
+.sao b {
+  flex:none; display:inline-block; min-width:72px; margin-right:6px;
+  font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.08em; color:var(--key);
+}
+.sao p { display:flex; align-items:baseline; }
+
+/* stats */
+.stats { display:grid; grid-template-columns:1fr; gap:8px; }
+@media (min-width:720px) { .stats { grid-template-columns:1fr 1fr; } }
+.stat { padding:12px 14px; }
+.stat .k { font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--text-3); }
+.stat .v { margin-top:4px; font-size:16px; font-weight:600; font-variant-numeric:tabular-nums; letter-spacing:-.01em; }
+.stat .foot { margin-top:8px; }
+.dot { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:6px; vertical-align:baseline; }
+.dot-a { background:var(--team-a); } .dot-b { background:var(--team-b); }
+.pos-bar { display:flex; height:8px; margin-top:8px; border-radius:4px; overflow:hidden; background:var(--surface-2); }
+.pos-bar .a { background:var(--team-a); } .pos-bar .b { background:var(--team-b); }
+.pos-labels { display:flex; justify-content:space-between; margin-top:4px; font-size:13px; font-variant-numeric:tabular-nums; }
+.mini { margin-top:8px; display:flex; flex-direction:column; gap:6px; }
+.mini .row { display:grid; grid-template-columns:minmax(90px,auto) 1fr auto; gap:8px; align-items:center; font-size:13px; }
+.mini .track { display:block; height:6px; border-radius:3px; background:var(--surface-2); overflow:hidden; }
+.mini .fill { display:block; height:100%; border-radius:3px; }
+.mini .fill.a { background:var(--team-a); } .mini .fill.b { background:var(--team-b); }
+.mini .val { font-variant-numeric:tabular-nums; color:var(--text-2); }
+.stats-notes { margin-top:12px; font-size:12px; color:var(--text-3); }
+.stats-notes p + p { margin-top:4px; }
+
+/* advice */
+.advice { display:flex; flex-direction:column; gap:8px; }
+.adv { padding:12px 14px; }
+.pill {
+  display:inline-block; padding:2px 10px; border-radius:999px;
+  font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.08em;
+  background:color-mix(in srgb, var(--pill,#7b8194) 14%, transparent);
+  color:var(--pill,#7b8194);
+}
+.adv .rec { margin-top:8px; }
+.adv .evidence { margin-top:6px; font-size:12px; color:var(--text-2); }
+.adv .evidence .ts-ref { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-variant-numeric:tabular-nums; }
+
+/* footer */
+footer { border-top:1px solid var(--border); padding-top:16px; text-align:center; font-size:12px; color:var(--text-3); }
+
+@media print {
+  body { background:#fff; color:#111; }
+  .card, .ev, .media, .meta-strip { border-color:#ccc; background:#fff; box-shadow:none; }
+}
+</style>
+</head>
+<body>
+<main>
+
+  <header class="hdr">
+    <p class="eyebrow">Eleven — Tactical Session Replay</p>
+    <h1>Argentina <span class="vs num">3-0</span> Algeria</h1>
+    <p class="sub">FIFA World Cup 2026 · 2026-06-28</p>
+    <div class="meta-strip"><span>118 events</span><span>processed in 22m 41s</span><span>$0.07</span></div>
   </header>
-  <section class="mb-10">
-    <h2 class="text-xl font-semibold mb-4 text-slate-200">Session Replay</h2>
-    <div class="rounded-xl overflow-hidden border border-slate-700 bg-slate-900">
-      <img src="session_replay.gif" alt="Annotated broadcast session replay" class="w-full">
-    </div>
-    <p class="mt-2 text-xs text-slate-500">Condensed annotated broadcast — detections, teams and ball over the real footage.</p>
-    <p class="mt-1 text-xs"><a href="session_replay.mp4" class="text-emerald-400 hover:underline">Download as mp4</a></p>
-    <h3 class="text-lg font-semibold mt-6 mb-4 text-slate-200">…represented on the 2D pitch</h3>
-    <div class="rounded-xl overflow-hidden border border-slate-700 bg-slate-900">
-      <img src="pitch_replay.gif" alt="2D pitch session replay" class="w-full">
-    </div>
-    <p class="mt-2 text-xs text-slate-500">Full first half, continuous (00:00–46:59). Relative positions; calibrated metrics on key windows — see Stats.</p>
-    <p class="mt-1 text-xs text-slate-500">Hollow markers = last seen position (off-camera), cleared when the area re-enters view.</p>
-    <p class="mt-1 text-xs"><a href="pitch_replay.mp4" class="text-emerald-400 hover:underline">Download as mp4</a></p>
+  <section>
+    <h2>Session Replay</h2>
+    <div class="media"><img src="session_replay.gif" alt="Annotated broadcast session replay"></div>
+    <p class="caption">Condensed annotated broadcast — detections, teams and ball over the real footage.</p>
+    <p class="caption"><a href="session_replay.mp4">Download as mp4</a></p>
+    <h3>…represented on the 2D pitch</h3>
+    <div class="media"><img src="pitch_replay.gif" alt="2D pitch session replay"></div>
+    <p class="caption">Full first half, continuous (00:00–46:59). Relative positions; calibrated metrics on key windows — see Stats.</p>
+    <p class="caption">Hollow markers = last seen position (off-camera), cleared when the area re-enters view.</p>
+    <p class="caption"><a href="pitch_replay.mp4">Download as mp4</a></p>
   </section>
-  <section class="mb-10">
-    <h2 class="text-xl font-semibold mb-4 text-slate-200">Events Timeline</h2>
-    <div class="space-y-3">
-      <div class="rounded-lg border border-slate-700 bg-slate-900 p-4 flex items-start gap-3">
-          <span class="text-xl leading-none">🎯</span>
-          <span><span class="text-xs font-mono text-slate-400 mr-2">01:46 · H1</span>Argentina — shot<span class="block mt-1 text-sm text-slate-400">1× dangerous attack, 1× high press, 1× shot</span></span>
+  <section>
+    <h2>Events Timeline</h2>
+    <div class="legend"><span><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="6"/><circle cx="8" cy="8" r="2.2"/></svg>shot</span><span><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3l5 5-5 5M8 3l5 5-5 5"/></svg>dangerous attack</span><span><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12V5h12v7M2 12h12"/><circle cx="8" cy="9.5" r="1.4" fill="currentColor" stroke="none"/></svg>goal</span><span><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h8L8.5 3.5M13 10H5l2.5 2.5"/></svg>possession change</span><span><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12L12 4M6.5 4H12v5.5"/></svg>attacking movement</span><span><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 1.5L3.5 9H7l-1 5.5L11.5 7H8l1-5.5z"/></svg>high press</span></div>
+    <div class="tl">
+      <div class="ev team-a">
+        <div class="ev-head"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="6"/><circle cx="8" cy="8" r="2.2"/></svg>
+          <span><span class="ev-ts">01:46 · H1</span><span class="ev-team">Argentina</span> — <span class="ev-type">shot</span></span>
+        </div>
+        <div class="ev-chips"><span class="chip">1× dangerous attack</span><span class="chip">1× high press</span><span class="chip">1× shot</span></div>
       </div>
-      <div class="rounded-lg border border-slate-700 bg-slate-900 p-4 flex items-start gap-3">
-          <span class="text-xl leading-none">🎯</span>
-          <span><span class="text-xs font-mono text-slate-400 mr-2">06:56 · H1</span>Argentina — shot<span class="block mt-1 text-sm text-slate-400">1× dangerous attack, 1× set piece, 1× shot, 1× possession change within 6s</span></span>
+      <div class="ev team-a">
+        <div class="ev-head"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="6"/><circle cx="8" cy="8" r="2.2"/></svg>
+          <span><span class="ev-ts">06:56 · H1</span><span class="ev-team">Argentina</span> — <span class="ev-type">shot</span></span>
+        </div>
+        <div class="ev-chips"><span class="chip">1× dangerous attack</span><span class="chip">1× set piece</span><span class="chip">1× shot</span><span class="chip">1× possession change</span><span class="chip">within 6s</span></div>
       </div>
-      <div class="rounded-lg border border-slate-700 bg-slate-900 p-4 flex items-start gap-3">
-          <span class="text-xl leading-none">⚽</span>
-          <span><span class="text-xs font-mono text-slate-400 mr-2">10:10 · H1</span>Argentina — dangerous attack<span class="block mt-1 text-sm text-slate-400">1× dangerous attack, 1× set piece, 1× attacking movement within 2s</span></span>
+      <div class="ev team-a">
+        <div class="ev-head"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3l5 5-5 5M8 3l5 5-5 5"/></svg>
+          <span><span class="ev-ts">10:10 · H1</span><span class="ev-team">Argentina</span> — <span class="ev-type">dangerous attack</span></span>
+        </div>
+        <div class="ev-chips"><span class="chip">1× dangerous attack</span><span class="chip">1× set piece</span><span class="chip">1× attacking movement</span><span class="chip">within 2s</span></div>
       </div>
-      <div class="rounded-lg border border-slate-700 bg-slate-900 p-4 flex items-start gap-3">
-          <span class="text-xl leading-none">🥅</span>
-          <span><span class="text-xs font-mono text-slate-400 mr-2">11:13 · H1</span>Argentina — goal<span class="block mt-1 text-sm text-slate-400">5× dangerous attack, 4× set piece, 2× goal, 1× possession change, 1× attacking movement, 1× high press within 20s</span></span>
+      <div class="ev team-a">
+        <div class="ev-head"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12V5h12v7M2 12h12"/><circle cx="8" cy="9.5" r="1.4" fill="currentColor" stroke="none"/></svg>
+          <span><span class="ev-ts">11:13 · H1</span><span class="ev-team">Argentina</span> — <span class="ev-type">goal</span></span>
+        </div>
+        <div class="ev-chips"><span class="chip">5× dangerous attack</span><span class="chip">4× set piece</span><span class="chip">2× goal</span><span class="chip">1× possession change</span><span class="chip">1× attacking movement</span><span class="chip">1× high press</span><span class="chip">within 20s</span></div>
       </div>
-      <div class="rounded-lg border border-slate-700 bg-slate-900 p-4 flex items-start gap-3">
-          <span class="text-xl leading-none">🔄</span>
-          <span><span class="text-xs font-mono text-slate-400 mr-2">15:23 · H1</span>Algeria — possession change<span class="block mt-1 text-sm text-slate-400">4× possession change within 18s</span></span>
+      <div class="ev team-b">
+        <div class="ev-head"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h8L8.5 3.5M13 10H5l2.5 2.5"/></svg>
+          <span><span class="ev-ts">15:23 · H1</span><span class="ev-team">Algeria</span> — <span class="ev-type">possession change</span></span>
+        </div>
+        <div class="ev-chips"><span class="chip">4× possession change</span><span class="chip">within 18s</span></div>
       </div>
-      <div class="rounded-lg border border-slate-700 bg-slate-900 p-4 flex items-start gap-3">
-          <span class="text-xl leading-none">⚽</span>
-          <span><span class="text-xs font-mono text-slate-400 mr-2">21:12 · H1</span>Algeria — dangerous attack<span class="block mt-1 text-sm text-slate-400">1× attacking movement, 1× dangerous attack</span></span>
+      <div class="ev team-b">
+        <div class="ev-head"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3l5 5-5 5M8 3l5 5-5 5"/></svg>
+          <span><span class="ev-ts">21:12 · H1</span><span class="ev-team">Algeria</span> — <span class="ev-type">dangerous attack</span></span>
+        </div>
+        <div class="ev-chips"><span class="chip">1× attacking movement</span><span class="chip">1× dangerous attack</span></div>
       </div>
-      <div class="rounded-lg border border-slate-700 bg-slate-900 p-4 flex items-start gap-3">
-          <span class="text-xl leading-none">⚽</span>
-          <span><span class="text-xs font-mono text-slate-400 mr-2">22:01 · H1</span>Algeria — attacking movement<span class="block mt-1 text-sm text-slate-400">2× possession change, 1× attacking movement within 10s</span></span>
+      <div class="ev team-b">
+        <div class="ev-head"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12L12 4M6.5 4H12v5.5"/></svg>
+          <span><span class="ev-ts">22:01 · H1</span><span class="ev-team">Algeria</span> — <span class="ev-type">attacking movement</span></span>
+        </div>
+        <div class="ev-chips"><span class="chip">2× possession change</span><span class="chip">1× attacking movement</span><span class="chip">within 10s</span></div>
       </div>
-      <div class="rounded-lg border border-slate-700 bg-slate-900 p-4 flex items-start gap-3">
-          <span class="text-xl leading-none">⚽</span>
-          <span><span class="text-xs font-mono text-slate-400 mr-2">22:35 · H1</span>Algeria — dangerous attack<span class="block mt-1 text-sm text-slate-400">1× attacking movement, 1× dangerous attack, 1× set piece within 6s</span></span>
+      <div class="ev team-b">
+        <div class="ev-head"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3l5 5-5 5M8 3l5 5-5 5"/></svg>
+          <span><span class="ev-ts">22:35 · H1</span><span class="ev-team">Algeria</span> — <span class="ev-type">dangerous attack</span></span>
+        </div>
+        <div class="ev-chips"><span class="chip">1× attacking movement</span><span class="chip">1× dangerous attack</span><span class="chip">1× set piece</span><span class="chip">within 6s</span></div>
       </div>
-      <div class="rounded-lg border border-slate-700 bg-slate-900 p-4 flex items-start gap-3">
-          <span class="text-xl leading-none">⚽</span>
-          <span><span class="text-xs font-mono text-slate-400 mr-2">30:41 · H1</span>Argentina — attacking movement<span class="block mt-1 text-sm text-slate-400">1× attacking movement, 1× high press within 3s</span></span>
+      <div class="ev team-a">
+        <div class="ev-head"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12L12 4M6.5 4H12v5.5"/></svg>
+          <span><span class="ev-ts">30:41 · H1</span><span class="ev-team">Argentina</span> — <span class="ev-type">attacking movement</span></span>
+        </div>
+        <div class="ev-chips"><span class="chip">1× attacking movement</span><span class="chip">1× high press</span><span class="chip">within 3s</span></div>
       </div>
-      <details class="rounded-lg border border-slate-700 bg-slate-900 p-4">
-        <summary class="cursor-pointer flex items-start gap-3">
-          <span class="text-xl leading-none">⚡</span>
-          <span><span class="text-xs font-mono text-slate-400 mr-2">35:26 · H1</span>Argentina — high press<span class="block mt-1 text-sm text-slate-400">2× high press, 1× possession change, 1× transition, 1× attacking movement within 9s</span></span>
-        </summary>
-        <div class="mt-3 pl-9 text-sm text-slate-300"><p class="mt-1"><span class="text-slate-400">Situation:</span> Argentina transitions from the middle third to the attacking third via a long ball.</p><p class="mt-1"><span class="text-slate-400">Action:</span> Argentina midfielder executes a direct switch of play via a long diagonal pass to the right flank, bypassing Algeria&#x27;s mid-block to establish possession in the attacking third.</p><p class="mt-1"><span class="text-slate-400">Outcome:</span> chance_created (success: True)</p></div>
-      </details>
-      <details class="rounded-lg border border-slate-700 bg-slate-900 p-4">
-        <summary class="cursor-pointer flex items-start gap-3">
-          <span class="text-xl leading-none">⚽</span>
-          <span><span class="text-xs font-mono text-slate-400 mr-2">40:11 · H1</span>Algeria — dangerous attack<span class="block mt-1 text-sm text-slate-400">1× attacking movement, 1× dangerous attack within 8s</span></span>
-        </summary>
-        <div class="mt-3 pl-9 text-sm text-slate-300"><p class="mt-1"><span class="text-slate-400">Situation:</span> Algeria builds up down the left flank against Argentina&#x27;s compact mid-block.</p><p class="mt-1"><span class="text-slate-400">Action:</span> Algeria left winger executes a wide progression run to bypass Argentina&#x27;s mid-block, resulting in a crossing opportunity.</p><p class="mt-1"><span class="text-slate-400">Outcome:</span> chance_created (success: True)</p></div>
-      </details>
-      <div class="rounded-lg border border-slate-700 bg-slate-900 p-4 flex items-start gap-3">
-          <span class="text-xl leading-none">⚽</span>
-          <span><span class="text-xs font-mono text-slate-400 mr-2">45:10 · H1</span>Argentina — attacking movement<span class="block mt-1 text-sm text-slate-400">3× possession change, 1× attacking movement within 20s</span></span>
+      <div class="ev team-a key">
+        <div class="ev-head"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 1.5L3.5 9H7l-1 5.5L11.5 7H8l1-5.5z"/></svg>
+          <span><span class="ev-ts">35:26 · H1</span><span class="ev-team">Argentina</span> — <span class="ev-type">high press</span></span>
+        </div>
+        <div class="ev-chips"><span class="chip">2× high press</span><span class="chip">1× possession change</span><span class="chip">1× transition</span><span class="chip">1× attacking movement</span><span class="chip">within 9s</span></div>
+        <div class="sao"><p><b>Situation</b><span>Argentina transitions from the middle third to the attacking third via a long ball.</span></p><p><b>Action</b><span>Argentina midfielder executes a direct switch of play via a long diagonal pass to the right flank, bypassing Algeria&#x27;s mid-block to establish possession in the attacking third.</span></p><p><b>Outcome</b><span>chance_created (success: True)</span></p></div>
       </div>
-    </div>
-  </section>
-  <section class="mb-10">
-    <h2 class="text-xl font-semibold mb-4 text-slate-200">Stats Panel</h2>
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      <div class="rounded-lg border border-slate-700 bg-slate-900 p-4">
-        <p class="text-xs uppercase tracking-wide text-slate-400">Formations (m)</p>
-        <p class="mt-1 text-lg font-semibold">3-3-2-1 vs 3-4-1 <span class="text-sm font-normal text-slate-400">(partial shapes, broadcast frame)</span></p>
+      <div class="ev team-b key">
+        <div class="ev-head"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3l5 5-5 5M8 3l5 5-5 5"/></svg>
+          <span><span class="ev-ts">40:11 · H1</span><span class="ev-team">Algeria</span> — <span class="ev-type">dangerous attack</span></span>
+        </div>
+        <div class="ev-chips"><span class="chip">1× attacking movement</span><span class="chip">1× dangerous attack</span><span class="chip">within 8s</span></div>
+        <div class="sao"><p><b>Situation</b><span>Algeria builds up down the left flank against Argentina&#x27;s compact mid-block.</span></p><p><b>Action</b><span>Algeria left winger executes a wide progression run to bypass Argentina&#x27;s mid-block, resulting in a crossing opportunity.</span></p><p><b>Outcome</b><span>chance_created (success: True)</span></p></div>
       </div>
-      <div class="rounded-lg border border-slate-700 bg-slate-900 p-4">
-        <p class="text-xs uppercase tracking-wide text-slate-400">Possession</p>
-        <p class="mt-1 text-lg font-semibold">57.2% – 42.8%</p>
-      </div>
-      <div class="rounded-lg border border-slate-700 bg-slate-900 p-4">
-        <p class="text-xs uppercase tracking-wide text-slate-400">Events (118)</p>
-        <p class="mt-1 text-lg font-semibold">possession change: 87, attacking movement: 26, dangerous attack: 3</p>
-      </div>
-      <div class="rounded-lg border border-slate-700 bg-slate-900 p-4">
-        <p class="text-xs uppercase tracking-wide text-slate-400">Threat index</p>
-        <p class="mt-1 text-lg font-semibold">A: 4.84 · B: 5.39</p>
-      </div>
-      <div class="rounded-lg border border-slate-700 bg-slate-900 p-4">
-        <p class="text-xs uppercase tracking-wide text-slate-400">Attacking phases (movements + dangerous)</p>
-        <p class="mt-1 text-lg font-semibold">A: 14 · B: 15</p>
-      </div>
-      <div class="rounded-lg border border-slate-700 bg-slate-900 p-4">
-        <p class="text-xs uppercase tracking-wide text-slate-400">Field tilt</p>
-        <p class="mt-1 text-lg font-semibold">A: 17.0% attacking third · B: 31.2% attacking third</p>
-      </div>
-      <div class="rounded-lg border border-slate-700 bg-slate-900 p-4">
-        <p class="text-xs uppercase tracking-wide text-slate-400">Team block (calibrated moments)</p>
-        <p class="mt-1 text-lg font-semibold">A: 41.2×45.4 m · B: 30.6×47.2 m</p>
-      </div>
-      <div class="rounded-lg border border-slate-700 bg-slate-900 p-4">
-        <p class="text-xs uppercase tracking-wide text-slate-400">Line spacing (calibrated moments)</p>
-        <p class="mt-1 text-lg font-semibold">A: 21.4 m · B: 16.6 m</p>
-      </div>
-    </div>
-    <p class="mt-3 text-xs text-slate-500">metrics from calibrated key moments (59s of play, 5 windows) — NOT full-match values</p>
-  </section>
-  <section class="mb-10">
-    <h2 class="text-xl font-semibold mb-4 text-slate-200">AI Halftime Advice</h2>
-    <div class="space-y-3">
-      <div class="rounded-lg border bg-emerald-500/10 border-emerald-500/40 p-4">
-        <span class="text-xs font-bold uppercase tracking-wider text-emerald-400">EXPLOIT</span>
-        <p class="mt-2">Consider continuing to attack the space at the edge of Algeria’s block with early diagonals and cutbacks, rather than forcing central combinations, because the 35:30-35:32 switch created a chance and multiple sequences note the arc left vacant.</p>
-        <p class="mt-2 text-xs text-slate-400">Evidence: SAO triplet at 35:30-35:32; sequence 1 and 3 vulnerabilities repeatedly cite space at the edge of the penalty area and second-ball openings.</p>
-      </div>
-      <div class="rounded-lg border bg-red-500/10 border-red-500/40 p-4">
-        <span class="text-xs font-bold uppercase tracking-wider text-red-400">FIX</span>
-        <p class="mt-2">Consider tightening rest-defense behind Argentina’s attacking line, because Algeria’s left-flank progression at 40:19-45:03 and the repeated notes about quick counters show the block can be exposed if possession is lost high.</p>
-        <p class="mt-2 text-xs text-slate-400">Evidence: Sequence 16 SAO triplet (Algeria left winger carry -&gt; chance_created); sequence 2 and 15 vulnerabilities note counter-attack risk behind advanced positioning.</p>
-      </div>
-      <div class="rounded-lg border bg-blue-500/10 border-blue-500/40 p-4">
-        <span class="text-xs font-bold uppercase tracking-wider text-blue-400">FORMATION</span>
-        <p class="mt-2">Consider using a slightly wider attacking structure in possession to stretch Algeria’s 3-4-1 mid-block, since their central compactness is consistently denying vertical lanes but leaving wide switches available.</p>
-        <p class="mt-2 text-xs text-slate-400">Evidence: Dashboard formations: Argentina partial 3-3-2-1 vs Algeria partial 3-4-1; sequence 2 notes wide circulation stretching the block, and sequence 14 shows a successful flank bypass.</p>
-      </div>
-      <div class="rounded-lg border bg-purple-500/10 border-purple-500/40 p-4">
-        <span class="text-xs font-bold uppercase tracking-wider text-purple-400">SET PIECES</span>
-        <p class="mt-2">Consider assigning a dedicated edge-of-box runner for second balls on both attacking and defending dead balls, because the same vacancy around the penalty arc keeps appearing in the set-piece sequences.</p>
-        <p class="mt-2 text-xs text-slate-400">Evidence: Sequences 3, 4, 5, 7, 8, 10, and 12 all mention the edge of the box being open for rebounds/late runners.</p>
+      <div class="ev team-a">
+        <div class="ev-head"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12L12 4M6.5 4H12v5.5"/></svg>
+          <span><span class="ev-ts">45:10 · H1</span><span class="ev-team">Argentina</span> — <span class="ev-type">attacking movement</span></span>
+        </div>
+        <div class="ev-chips"><span class="chip">3× possession change</span><span class="chip">1× attacking movement</span><span class="chip">within 20s</span></div>
       </div>
     </div>
   </section>
-  <footer class="border-t border-slate-800 pt-6 text-center text-sm text-slate-500">
-    Generated by Eleven · Processing: 22m 41s · Cost: $0.07 · 2026-07-20
+  <section>
+    <h2>Stats Panel</h2>
+    <div class="stats">
+      <div class="card stat">
+        <p class="k">Formations</p>
+        <p class="v"><span class="dot dot-a"></span>Argentina <span class="num">3-3-2-1</span> <span class="num" style="color:var(--text-3)">(9 visible)</span><br><span class="dot dot-b"></span>Algeria <span class="num">3-4-1</span> <span class="num" style="color:var(--text-3)">(8 visible)</span></p><p class="foot"><span class="chip">partial shapes, broadcast frame</span></p>
+      </div>
+      <div class="card stat">
+        <p class="k">Possession</p>
+        
+        <div class="pos-bar"><span class="a" style="width:57.2%"></span><span class="b" style="width:42.8%"></span></div>
+        <div class="pos-labels"><span><span class="dot dot-a"></span>Argentina <span class="num">57.2%</span></span>
+        <span><span class="num">42.8%</span> <span class="dot dot-b"></span>Algeria</span></div>
+      </div>
+      <div class="card stat">
+        <p class="k">Events (118)</p>
+        <div class="ev-chips" style="margin-top:6px"><span class="chip">possession change <span class="num">87</span></span> <span class="chip">attacking movement <span class="num">26</span></span> <span class="chip">dangerous attack <span class="num">3</span></span> <span class="chip">set piece <span class="num">1</span></span> <span class="chip">high press <span class="num">1</span></span> </div>
+      </div>
+      <div class="card stat">
+        <p class="k">Threat index</p>
+        <div class="mini"><div class="row"><span><span class="dot dot-a"></span>Argentina</span><span class="track"><span class="fill a" style="width:90%"></span></span><span class="val num">4.84</span></div><div class="row"><span><span class="dot dot-b"></span>Algeria</span><span class="track"><span class="fill b" style="width:100%"></span></span><span class="val num">5.39</span></div></div>
+      </div>
+      <div class="card stat">
+        <p class="k">Attacking phases (movements + dangerous)</p>
+        <div class="mini"><div class="row"><span><span class="dot dot-a"></span>Argentina</span><span class="track"><span class="fill a" style="width:93%"></span></span><span class="val num">14</span></div><div class="row"><span><span class="dot dot-b"></span>Algeria</span><span class="track"><span class="fill b" style="width:100%"></span></span><span class="val num">15</span></div></div>
+      </div>
+      <div class="card stat">
+        <p class="k">Field tilt (attacking third)</p>
+        <div class="mini"><div class="row"><span><span class="dot dot-a"></span>Argentina</span><span class="track"><span class="fill a" style="width:54%"></span></span><span class="val num">17.0%</span></div><div class="row"><span><span class="dot dot-b"></span>Algeria</span><span class="track"><span class="fill b" style="width:100%"></span></span><span class="val num">31.2%</span></div></div>
+      </div>
+      <div class="card stat">
+        <p class="k">Team block</p>
+        <p class="v"><span class="dot dot-a"></span>Argentina <span class="num">41.2×45.4 m</span><br><span class="dot dot-b"></span>Algeria <span class="num">30.6×47.2 m</span></p><p class="foot"><span class="chip">calibrated key moments — NOT full-match values</span></p>
+      </div>
+      <div class="card stat">
+        <p class="k">Line spacing</p>
+        <p class="v"><span class="dot dot-a"></span>Argentina <span class="num">21.4 m</span><br><span class="dot dot-b"></span>Algeria <span class="num">16.6 m</span></p><p class="foot"><span class="chip">calibrated key moments — NOT full-match values</span></p>
+      </div>
+    </div>
+    <div class="stats-notes">
+      <p>metrics from calibrated key moments (59s of play, 5 windows) — NOT full-match values</p></div>
+  </section>
+  <section>
+    <h2>AI Halftime Advice</h2>
+    <div class="advice">
+      <div class="card adv">
+        <span class="pill" style="--pill:var(--cat-exploit)">EXPLOIT</span>
+        <p class="rec">Consider continuing to attack the space at the edge of Algeria’s block with early diagonals and cutbacks, rather than forcing central combinations, because the 35:30-35:32 switch created a chance and multiple sequences note the arc left vacant.</p>
+        <p class="evidence">Evidence: SAO triplet at <span class="ts-ref">35:30-35:32</span>; sequence 1 and 3 vulnerabilities repeatedly cite space at the edge of the penalty area and second-ball openings.</p>
+      </div>
+      <div class="card adv">
+        <span class="pill" style="--pill:var(--cat-fix)">FIX</span>
+        <p class="rec">Consider tightening rest-defense behind Argentina’s attacking line, because Algeria’s left-flank progression at 40:19-45:03 and the repeated notes about quick counters show the block can be exposed if possession is lost high.</p>
+        <p class="evidence">Evidence: Sequence 16 SAO triplet (Algeria left winger carry -&gt; chance_created); sequence 2 and 15 vulnerabilities note counter-attack risk behind advanced positioning.</p>
+      </div>
+      <div class="card adv">
+        <span class="pill" style="--pill:var(--cat-formation)">FORMATION</span>
+        <p class="rec">Consider using a slightly wider attacking structure in possession to stretch Algeria’s 3-4-1 mid-block, since their central compactness is consistently denying vertical lanes but leaving wide switches available.</p>
+        <p class="evidence">Evidence: Dashboard formations: Argentina partial 3-3-2-1 vs Algeria partial 3-4-1; sequence 2 notes wide circulation stretching the block, and sequence 14 shows a successful flank bypass.</p>
+      </div>
+      <div class="card adv">
+        <span class="pill" style="--pill:var(--cat-set-pieces)">SET PIECES</span>
+        <p class="rec">Consider assigning a dedicated edge-of-box runner for second balls on both attacking and defending dead balls, because the same vacancy around the penalty arc keeps appearing in the set-piece sequences.</p>
+        <p class="evidence">Evidence: Sequences 3, 4, 5, 7, 8, 10, and 12 all mention the edge of the box being open for rebounds/late runners.</p>
+      </div>
+    </div>
+  </section>
+  <footer>
+    Generated by Eleven · 2026-07-22
   </footer>
 </main>
 </body>
